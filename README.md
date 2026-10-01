@@ -45,4 +45,4 @@ $$r^2_{\text{adj}} = r^2 - \frac{1 - r^2}{n - 2}$$
 
 which is algebraically equivalent to:
 
-$$r^2_{\text{adj}} = \frac{(n - 1)\, r^2 - 1}{n - 2}$$
+$$r^2_{\text{adj}} = \frac{(n - 1) r^2 - 1}{n - 2}$$
