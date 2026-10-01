@@ -39,7 +39,7 @@ In the original `bulik/ldsc`, normalized genotype blocks are multiplied as `np.d
 
 ## Bias Correction
 
-As per [Bulik-Sullivan et al. *Nature Genetics*, 2015](https://www.nature.com/articles/ng.3211). The sample $r^2$ is biased upward by approximately $1/n$. The unbiased estimator used in the original `bulik/ldsc` applies the following adjustment:
+As per [Bulik-Sullivan et al. *Nature Genetics*, 2015](https://www.nature.com/articles/ng.3211), the sample $r^2$ is biased upward by approximately $1/n$. The unbiased estimator used in the original `bulik/ldsc` applies the following adjustment:
 
 $$r^2_{\text{adj}} = r^2 - \frac{1 - r^2}{n - 2}$$
 
