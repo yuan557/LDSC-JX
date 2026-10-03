@@ -3,3 +3,5 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+tests/validate_against_bulik.py
+tests/compare_scores.py
