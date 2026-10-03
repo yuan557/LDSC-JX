@@ -8,9 +8,9 @@ GPU-accelerated LD Score Regression (LDSC) in Python 3, powered by JAX.
 
 The original `bulik/ldsc` is written in Python 2 and runs on CPU with NumPy. `ldsc-jx` addresses this by:
 
-- **GPU acceleration** via JAX — the GEMM-heavy LD score calculation runs on GPU through XLA
-- **Python 3** — no Python 2 dependency
-- **pip-installable** — a self-contained package with no manual setup
+- **GPU acceleration** via JAX: the GEMM-heavy LD score calculation runs on GPU through XLA
+- **Python 3**: no Python 2 dependency
+- **pip-installable**: a self-contained package with no manual setup
 
 The core algorithm is the same. LD scores computed by `ldsc-jx` are numerically concordant with the original (validated against `bulik/ldsc` on 1000 Genomes Phase 3 data).
 
