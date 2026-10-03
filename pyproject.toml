@@ -17,6 +17,7 @@ dependencies = [
 
 [project.optional-dependencies]
 gpu = ["jax[cuda12]"]
+test = ["pytest"]
 
 [project.scripts]
 ldsc-jx = "ldsc_jx.cli:main"
