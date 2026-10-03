@@ -6,7 +6,7 @@ DATA = "tests/data/g1k_chr22_test.bed"
 
 def test_shape():
     X, snp_pos, snp_cm, chrom = read_genotypes(DATA)
-    assert X.shape == (2504, 50)
+    assert X.shape == (2504, 1000)
 
 
 def test_no_nans():
