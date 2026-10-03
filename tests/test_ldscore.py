@@ -7,14 +7,14 @@ DATA = "tests/data/g1k_chr22_test.bed"
 
 
 def test_block_lefts_shape():
-    X, snp_pos, _, _ = read_genotypes(DATA)
+    X, snp_pos, _, _, _ = read_genotypes(DATA)
     block_left, block_right = get_block_lefts(snp_pos, 1000000)
     assert len(block_left) == X.shape[1]
     assert len(block_right) == X.shape[1]
 
 
 def test_block_lefts_order():
-    X, snp_pos, _, _ = read_genotypes(DATA)
+    X, snp_pos, _, _, _ = read_genotypes(DATA)
     block_left, block_right = get_block_lefts(snp_pos, 1000000)
     for i in range(len(block_left)):
         assert block_left[i] <= i
@@ -22,14 +22,14 @@ def test_block_lefts_order():
 
 
 def test_standardize_mean_zero():
-    X, _, _, _ = read_genotypes(DATA)
+    X, _, _, _, _ = read_genotypes(DATA)
     X_std = standardize(jnp.array(X))
     means = jnp.mean(X_std, axis=0)
     assert jnp.allclose(means, 0, atol=1e-5)
 
 
 def test_standardize_unit_variance():
-    X, _, _, _ = read_genotypes(DATA)
+    X, _, _, _, _ = read_genotypes(DATA)
     X_std = standardize(jnp.array(X))
     stds = jnp.std(X_std, axis=0)
     polymorphic = stds > 0
@@ -37,7 +37,7 @@ def test_standardize_unit_variance():
 
 
 def test_ld_scores_shape():
-    X, snp_pos, _, _ = read_genotypes(DATA)
+    X, snp_pos, _, _, _ = read_genotypes(DATA)
     block_left, block_right = get_block_lefts(snp_pos, 1000000)
     X_std = standardize(jnp.array(X))
     ld_scores = compute_ld_scores(X_std, block_left, block_right)
@@ -45,7 +45,7 @@ def test_ld_scores_shape():
 
 
 def test_ld_scores_positive():
-    X, snp_pos, _, _ = read_genotypes(DATA)
+    X, snp_pos, _, _, _ = read_genotypes(DATA)
     block_left, block_right = get_block_lefts(snp_pos, 1000000)
     X_std = standardize(jnp.array(X))
     ld_scores = compute_ld_scores(X_std, block_left, block_right)
@@ -54,7 +54,7 @@ def test_ld_scores_positive():
 
 
 def test_ld_scores_self_contributes_one():
-    X, snp_pos, _, _ = read_genotypes(DATA)
+    X, snp_pos, _, _, _ = read_genotypes(DATA)
     block_left, block_right = get_block_lefts(snp_pos, 1000000)
     X_std = standardize(jnp.array(X))
     ld_scores = compute_ld_scores(X_std, block_left, block_right)
@@ -65,7 +65,7 @@ def test_ld_scores_self_contributes_one():
 
 
 def test_ld_scores_match_bulik():
-    X, snp_pos, _, _ = read_genotypes(DATA)
+    X, snp_pos, _, _, _ = read_genotypes(DATA)
     kept = np.loadtxt("tests/data/bulik_kept_snps_chr22.txt", dtype=int)
     bulik_scores = np.loadtxt("tests/data/bulik_ld_scores_chr22.txt").flatten()
 
