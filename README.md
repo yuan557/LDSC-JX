@@ -26,7 +26,19 @@ pip install git+https://github.com/yuan557/LDSC-JX.git
 ldsc-jx --bfile data/chr22 --l2 --ld-wind-kb 1000 --out output/chr22
 ```
 
-This outputs `chr22.l2.ldscore.gz`, `chr22.l2.M`, and `chr22.l2.M_5_50`, matching the format of bulik/ldsc.
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--bfile` | required | PLINK .bed/.bim/.fam prefix |
+| `--l2` | | Compute LD scores |
+| `--ld-wind-kb` | 1000 | Window size in kilobases |
+| `--chunk-size` | 50 | Number of SNPs per compute batch |
+| `--out` | required | Output file prefix |
+
+Output files, matching the format of bulik/ldsc:
+
+- `<out>.l2.ldscore.gz`: gzipped TSV with columns `CHR`, `SNP`, `BP`, `L2`
+- `<out>.l2.M`: total number of SNPs
+- `<out>.l2.M_5_50`: number of SNPs with MAF > 5% (used by `--h2` and `--rg` as the default denominator)
 
 ### Python API
 
