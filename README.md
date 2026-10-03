@@ -4,26 +4,43 @@ GPU-accelerated LD Score Regression (LDSC) in Python 3, powered by JAX.
 
 `ldsc-jx` is a reimplementation of LDSC ([Bulik-Sullivan et al. *Nature Genetics*, 2015](https://www.nature.com/articles/ng.3211); [repo](https://github.com/bulik/ldsc)) that offloads the compute-heavy LD score calculation to GPU via JAX. It is designed to accelerate windowed LD computation on GPUs while maintaining numerical compatibility with the reference LDSC implementation.
 
-## LDSC Overview
+## Why ldsc-jx
 
-LD Score Regression uses linkage disequilibrium (LD) information from a reference genotype dataset to estimate the correlation between the strength of association of genetic variants and how much they are inherited together with other surrounding genetic variants. The slope of the regression is proportional to heritability estimated by the GWAS study, and its intercept minus 1 measures confounding bias that inflates GWAS summary statistics.
+The original `bulik/ldsc` is written in Python 2 and runs on CPU with NumPy. `ldsc-jx` addresses this by:
 
-Given a genotype matrix **X** of shape `(n, m)` where `n` is individuals and `m` is SNVs, for each SNV *j*, its LD score is defined as the sum of *r*<sup>2</sup> of all other genetic variants within a selected window.
+- **GPU acceleration** via JAX — the GEMM-heavy LD score calculation runs on GPU through XLA
+- **Python 3** — no Python 2 dependency
+- **pip-installable** — a self-contained package with no manual setup
 
-$$\ell_j = \sum_{k \in W(j)} r_{jk}^2$$
+The core algorithm is the same. LD scores computed by `ldsc-jx` are numerically concordant with the original (validated against `bulik/ldsc` on 1000 Genomes Phase 3 data).
 
-where:
+## Quickstart
 
-- $r_{jk}^2$ is the squared correlation between SNV *j* and SNV *k*
-- $W(j)$ is the set of SNVs within the selected LD window, typically defined in units of cM or kb
+```bash
+pip install git+https://github.com/yuan557/LDSC-JX.git
+```
 
-The LD Score therefore measures the amount of local LD surrounding a given SNV: SNVs that are correlated with many nearby variants will have larger LD Scores.
+```python
+from ldsc_jx.parse import read_genotypes
+from ldsc_jx.ldscore import get_block_lefts, standardize, compute_ld_scores
+import jax.numpy as jnp
 
-`ldsc-jx` aims to accelerate pairwise correlation calculation as matrix multiplication, which is optimized on GPUs.
+# read genotypes from PLINK .bed file
+X, snp_pos, snp_cm, chrom = read_genotypes("data/chr22.bed")
+
+# compute LD scores with a 1000 kb window
+block_left, block_right = get_block_lefts(snp_pos, 1000000)
+X_std = standardize(jnp.array(X))
+ld_scores = compute_ld_scores(X_std, block_left, block_right)
+```
 
 ## Computing LD Scores
 
-Let the genotype matrix be $X \in \mathbb{R}^{n \times m}$, where $n$ is the number of individuals and $m$ is the number of SNVs. Each column is standardized to zero mean and unit variance. For a chunk of SNVs, the correlation matrix is computed as:
+Given a genotype matrix $X \in \mathbb{R}^{n \times m}$ where $n$ is individuals and $m$ is SNVs, the LD score for SNV $j$ is the sum of squared correlations within a window:
+
+$$\ell_j = \sum_{k \in W(j)} r_{jk}^2$$
+
+Each column of $X$ is standardized to zero mean and unit variance. For a chunk of SNVs, the correlation matrix is computed as:
 
 ```
 R = (1/n) * X_chunk.T @ X_window
