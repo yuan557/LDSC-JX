@@ -20,13 +20,23 @@ The core algorithm is the same. LD scores computed by `ldsc-jx` are numerically 
 pip install git+https://github.com/yuan557/LDSC-JX.git
 ```
 
+### CLI
+
+```bash
+ldsc-jx --bfile data/chr22 --l2 --ld-wind-kb 1000 --out output/chr22
+```
+
+This outputs `chr22.l2.ldscore.gz`, `chr22.l2.M`, and `chr22.l2.M_5_50`, matching the format of bulik/ldsc.
+
+### Python API
+
 ```python
 from ldsc_jx.parse import read_genotypes
 from ldsc_jx.ldscore import get_block_lefts, standardize, compute_ld_scores
 import jax.numpy as jnp
 
 # read genotypes from PLINK .bed file
-X, snp_pos, snp_cm, chrom = read_genotypes("data/chr22.bed")
+X, snp_pos, snp_cm, chrom, snp_id = read_genotypes("data/chr22.bed")
 
 # compute LD scores with a 1000 kb window
 block_left, block_right = get_block_lefts(snp_pos, 1000000)
