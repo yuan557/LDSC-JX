@@ -35,7 +35,7 @@ This is a general matrix-matrix multiplication (GEMM), where `matmul` in JAX rep
 l2 = sum(R ** 2, axis=1)
 ```
 
-In the original `bulik/ldsc`, normalized genotype blocks are multiplied as `np.dot(A.T, B / n)`, followed by squaring and summation to obtain LD Scores. The reference implementation performs these operations on the CPU using NumPy. `ldsc-jx` preserves this computational structure while replacing NumPy with JAX, allowing the same GEMM-heavy calculation to target GPUs. JAX's `jit` compiler then optimizes the surrounding array operations (matrix multiplication, squaring, and reductions) together via XLA.
+In the original `bulik/ldsc`, normalized genotype blocks are multiplied as `np.dot(A.T, B / n)`, followed by squaring and summation to obtain LD Scores. In this notation, `A` corresponds to `X_chunk` and `B` corresponds to `X_window`, the subsets of standardized genotype columns for the target chunk and its LD window, respectively. The reference implementation performs these operations on the CPU using NumPy. `ldsc-jx` preserves this computational structure while replacing NumPy with JAX, allowing the same GEMM-heavy calculation to target GPUs. JAX's `jit` compiler then optimizes the surrounding array operations (matrix multiplication, squaring, and reductions) together via XLA.
 
 ## Bias Correction
 
