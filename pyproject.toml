@@ -12,6 +12,7 @@ dependencies = [
     "jaxlib",
     "numpy",
     "pandas",
+    "scipy",
     "bed-reader",
 ]
 
